@@ -1,0 +1,88 @@
+from typing import Tuple
+
+import numpy as np
+import numpy.typing as npt
+from custom_types import ComplexMatrix
+
+from losses.loss import Loss
+from utils.label_utils import cat_to_arg_intervals
+from custom_types import CategoricalLabels, ComplexMatrix
+
+
+class IntervalDistance(Loss):
+    def __labels_to_intervals(self, labels: npt.NDArray) -> npt.NDArray[np.float_]:
+        return cat_to_arg_intervals(labels)
+
+    def __angular_distance(
+        self, theta1: np.float_, theta2: np.float_
+    ) -> Tuple[npt.NDArray[np.float_], npt.NDArray[np.bool_]]:
+        # derivative is {1 if |t1 - t2| was used, -1 if 2pi - |t1 - t2| was used}
+        # this will return false if it used |t1 - t2| and true if it used 2pi - |t1 - t2|
+
+        difference = np.abs(theta1 - theta2)
+        difference_2pi = 2 * np.pi - difference
+
+        return min(difference, difference_2pi), difference < difference_2pi
+
+    def __ravel_predictions(
+        self, predictions: npt.NDArray[np.float_]
+    ) -> npt.NDArray[np.float_]:
+        if len(predictions.shape) == 2:
+            predictions = predictions.ravel()
+
+        return predictions
+
+    def calculate_loss(
+        self, labels: CategoricalLabels, predictions: ComplexMatrix
+    ) -> np.float_:
+        labels = self.__labels_to_intervals(labels)
+        predictions = self.__ravel_predictions(predictions)
+
+        angular_distance_vectorized = np.vectorize(self.__angular_distance)
+
+        correct_preds = (labels[:, 0] <= predictions) & (predictions < labels[:, 1])
+
+        lower_distances, _ = angular_distance_vectorized(predictions, labels[:, 0])
+        higher_distances, _ = angular_distance_vectorized(predictions, labels[:, 1])
+
+        wrong_preds = ~correct_preds & (lower_distances < higher_distances)
+
+        return (
+            np.sum(
+                np.where(
+                    correct_preds,
+                    0.0,
+                    np.where(wrong_preds, lower_distances, higher_distances),
+                )
+            )
+            / labels.shape[0]
+        )
+
+    def loss_gradient(
+        self, labels: CategoricalLabels, predictions: ComplexMatrix
+    ) -> ComplexMatrix:
+        labels = self.__labels_to_intervals(labels)
+        predictions = self.__ravel_predictions(predictions)
+        angular_distance_vectorized = np.vectorize(self.__angular_distance)
+
+        correct_preds = (labels[:, 0] <= predictions) & (predictions < labels[:, 1])
+
+        lower_distances, lower_distances_bools = angular_distance_vectorized(
+            predictions, labels[:, 0]
+        )
+        higher_distances, higher_distances_bools = angular_distance_vectorized(
+            predictions, labels[:, 1]
+        )
+
+        mask = np.where(
+            lower_distances < higher_distances,
+            lower_distances_bools,
+            higher_distances_bools,
+        )
+
+        wrong_preds = ~correct_preds & mask
+
+        return (
+            np.where(correct_preds, 0, np.where(wrong_preds, 1, -1)).reshape(-1, 1)
+            / labels.shape[0]
+        )
