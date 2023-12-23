@@ -94,7 +94,7 @@ class Model:
         self, x: ComplexMatrix, y: CategoricalLabels
     ) -> Tuple[float, Dict[str, float]]:
         # does forward on x, evaluates loss and metrics on y returns those
-        raise NotImplemented()
+        raise NotImplementedError
 
     def train(
         self,
