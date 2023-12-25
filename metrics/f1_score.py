@@ -1,4 +1,3 @@
-import numpy as np
 from custom_types import CategoricalLabels
 
 from metrics.metric import Metric

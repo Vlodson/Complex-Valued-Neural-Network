@@ -24,7 +24,11 @@ def main():
             Layer(neurons=1, activation="linsca"),
         ]
     )
-    model.build(optimizer=ADAM(1e-1), loss="mse", metrics=["acc"])
+    model.build(
+        optimizer=ADAM(1e-1),
+        loss="mse",
+        metrics=["accuracy", "recall", "precision", "f1"],
+    )
 
     model.train(
         x=x_train, y=y_train, batch_size=64, epochs=1024, x_val=x_val, y_val=y_val

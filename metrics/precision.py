@@ -14,7 +14,8 @@ class Precision(Metric):
 
     def __macro_precision(self, inter_results: Dict[int, MetricInterResults]) -> float:
         return sum(
-            result["correct"] / result["all_clf"] for _, result in inter_results.items()
+            (result["correct"] / result["all_clf"]) if result["all_clf"] != 0 else 0
+            for _, result in inter_results.items()
         ) / len(inter_results)
 
     def __micro_precision(self, inter_results: Dict[int, MetricInterResults]) -> float:
