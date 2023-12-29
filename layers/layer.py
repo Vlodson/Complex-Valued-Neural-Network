@@ -3,6 +3,7 @@ from typing import Optional
 import numpy as np
 import numpy.typing as npt
 
+import wrapped_numpy as wnp
 from custom_types import ComplexMatrix
 from activations.activation import Activation
 from activations.activations_dict import ACTIVATIONS
@@ -64,7 +65,7 @@ class Layer:
         """
         Sets the transfer field given some input x
         """
-        self.transfer = x @ self.weights + self.bias
+        self.transfer = wnp.add(wnp.dot(x, self.weights), self.bias)
 
     def __activation(self) -> None:
         """
