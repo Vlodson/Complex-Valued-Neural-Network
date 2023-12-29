@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 
-from losses.complex_mse_loss import ComplexMSE
+from losses.complex64mse_loss import ComplexMSE
 from utils.synthetic_data import (
     make_linear_multiclass_dataset,
 )

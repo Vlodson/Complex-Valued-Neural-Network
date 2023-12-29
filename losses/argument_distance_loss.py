@@ -8,16 +8,16 @@ from custom_types import ComplexMatrix, CategoricalLabels
 
 class ArgumentDistance(Loss):
     def __angular_distance(
-        self, theta1: npt.NDArray[np.float_], theta2: npt.NDArray[np.float_]
-    ) -> npt.NDArray[np.float_]:
+        self, theta1: npt.NDArray[np.float32], theta2: npt.NDArray[np.float32]
+    ) -> npt.NDArray[np.float32]:
         distance = np.abs(theta1 - theta2)
         distance_2pi = 2 * np.pi - distance
 
         return np.where(distance < distance_2pi, distance, distance_2pi)
 
     def __angular_distance_derivative(
-        self, theta1: npt.NDArray[np.float_], theta2: npt.NDArray[np.float_]
-    ) -> npt.NDArray[np.float_]:
+        self, theta1: npt.NDArray[np.float32], theta2: npt.NDArray[np.float32]
+    ) -> npt.NDArray[np.float32]:
         distance = np.abs(theta1 - theta2)
         distance_2pi = 2 * np.pi - distance
 
@@ -37,7 +37,7 @@ class ArgumentDistance(Loss):
 
     def loss_gradient(
         self, labels: CategoricalLabels, predictions: ComplexMatrix
-    ) -> npt.NDArray[np.float_]:
+    ) -> npt.NDArray[np.float32]:
         labels = cat_to_arg_centers(labels)
         predictions = (
             predictions.ravel() if len(predictions.shape) == 2 else predictions

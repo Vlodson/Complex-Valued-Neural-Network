@@ -6,7 +6,7 @@ from utils.label_utils import cat_to_arg_centers, cat_to_unit_vector
 
 
 def arg_to_cat(
-    arguments: npt.NDArray[np.float_], num_of_cats: int
+    arguments: npt.NDArray[np.float32], num_of_cats: int
 ) -> npt.NDArray[np.int_]:
     """
     Turns arguments to categorical values based on the number of classes

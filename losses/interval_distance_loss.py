@@ -10,12 +10,12 @@ from custom_types import CategoricalLabels, ComplexMatrix
 
 
 class IntervalDistance(Loss):
-    def __labels_to_intervals(self, labels: npt.NDArray) -> npt.NDArray[np.float_]:
+    def __labels_to_intervals(self, labels: npt.NDArray) -> npt.NDArray[np.float32]:
         return cat_to_arg_intervals(labels)
 
     def __angular_distance(
-        self, theta1: np.float_, theta2: np.float_
-    ) -> Tuple[npt.NDArray[np.float_], npt.NDArray[np.bool_]]:
+        self, theta1: np.float32, theta2: np.float32
+    ) -> Tuple[npt.NDArray[np.float32], npt.NDArray[np.bool_]]:
         # derivative is {1 if |t1 - t2| was used, -1 if 2pi - |t1 - t2| was used}
         # this will return false if it used |t1 - t2| and true if it used 2pi - |t1 - t2|
 
@@ -25,8 +25,8 @@ class IntervalDistance(Loss):
         return min(difference, difference_2pi), difference < difference_2pi
 
     def __ravel_predictions(
-        self, predictions: npt.NDArray[np.float_]
-    ) -> npt.NDArray[np.float_]:
+        self, predictions: npt.NDArray[np.float32]
+    ) -> npt.NDArray[np.float32]:
         if len(predictions.shape) == 2:
             predictions = predictions.ravel()
 
@@ -34,7 +34,7 @@ class IntervalDistance(Loss):
 
     def calculate_loss(
         self, labels: CategoricalLabels, predictions: ComplexMatrix
-    ) -> np.float_:
+    ) -> np.float32:
         labels = self.__labels_to_intervals(labels)
         predictions = self.__ravel_predictions(predictions)
 

@@ -19,18 +19,18 @@ class Layer:
         self.neurons: Optional[int] = neurons
         self.input_shape: Optional[int] = input_shape
 
-        self.x: ComplexMatrix = np.empty((0, 0), dtype=np.complex_)
-        self.transfer: ComplexMatrix = np.empty((0, 0), dtype=np.complex_)
-        self.y: ComplexMatrix = np.empty((0, 0), dtype=np.complex_)
+        self.x: ComplexMatrix = np.empty((0, 0), dtype=np.complex64)
+        self.transfer: ComplexMatrix = np.empty((0, 0), dtype=np.complex64)
+        self.y: ComplexMatrix = np.empty((0, 0), dtype=np.complex64)
 
-        self.transfer_grad: ComplexMatrix = np.empty((0, 0), dtype=np.complex_)
-        self.x_grad: ComplexMatrix = np.empty((0, 0), dtype=np.complex_)
+        self.transfer_grad: ComplexMatrix = np.empty((0, 0), dtype=np.complex64)
+        self.x_grad: ComplexMatrix = np.empty((0, 0), dtype=np.complex64)
 
-        self.weights: ComplexMatrix = np.empty((0, 0), dtype=np.complex_)
-        self.bias: ComplexMatrix = np.empty((0, 0), dtype=np.complex_)
+        self.weights: ComplexMatrix = np.empty((0, 0), dtype=np.complex64)
+        self.bias: ComplexMatrix = np.empty((0, 0), dtype=np.complex64)
 
-        self.weights_grad: ComplexMatrix = np.empty((0, 0), dtype=np.complex_)
-        self.bias_grad: ComplexMatrix = np.empty((0, 0), dtype=np.complex_)
+        self.weights_grad: ComplexMatrix = np.empty((0, 0), dtype=np.complex64)
+        self.bias_grad: ComplexMatrix = np.empty((0, 0), dtype=np.complex64)
 
         self.activation: Activation = (
             activation
@@ -105,7 +105,7 @@ class Layer:
         """
         self.bias_grad = np.sum(self.transfer_grad, axis=0).reshape(1, -1)
 
-    def backward(self, y_grad: ComplexMatrix | npt.NDArray[np.float_]) -> None:
+    def backward(self, y_grad: ComplexMatrix | npt.NDArray[np.float32]) -> None:
         """
         Does backprop for one layer
         """

@@ -3,7 +3,7 @@ import numpy as np
 import numpy.typing as npt
 
 
-ComplexMatrix: TypeAlias = npt.NDArray[np.complex_]
+ComplexMatrix: TypeAlias = npt.NDArray[np.complex64]
 
 T = TypeVar("T")
 NamedObjectDict: TypeAlias = Dict[str, T]
