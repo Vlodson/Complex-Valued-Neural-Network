@@ -22,13 +22,21 @@ class Model:
         self.layers = layers
         self.history = History()
 
+        self.optimizer = None
+        self.loss = None
+        self.metrics = None
+
     def build(
         self, optimizer: str | Optimizer, loss: str | Loss, metrics: List[str | Metric]
     ) -> None:
         for idx, layer in enumerate(self.layers):
-            layer.build(
-                input_shape=self.layers[idx - 1].neurons, name="layer" + str(idx)
-            ) if idx != 0 else layer.build(name="layer" + str(idx))
+            _ = (
+                layer.build(
+                    input_shape=self.layers[idx - 1].neurons, name="layer" + str(idx)
+                )
+                if idx != 0
+                else layer.build(name="layer" + str(idx))
+            )
 
         self.optimizer = (
             optimizer if isinstance(optimizer, Optimizer) else OPTIMIZERS[optimizer]
@@ -60,14 +68,16 @@ class Model:
 
     def __forward(self, x: ComplexMatrix) -> None:
         for idx, layer in enumerate(self.layers):
-            layer.forward(self.layers[idx - 1].y) if idx != 0 else layer.forward(x)
+            _ = layer.forward(self.layers[idx - 1].y) if idx != 0 else layer.forward(x)
 
     def __back(self, y_grad: ComplexMatrix) -> None:
         reversed_layers = self.layers[::-1]
         for idx, layer in enumerate(reversed_layers):
-            layer.backward(
-                reversed_layers[idx - 1].x_grad
-            ) if idx != 0 else layer.backward(y_grad)
+            _ = (
+                layer.backward(reversed_layers[idx - 1].x_grad)
+                if idx != 0
+                else layer.backward(y_grad)
+            )
 
     def __update_metric_state(
         self, old_state: Dict[str, float], new_state: Dict[str, float]
@@ -109,9 +119,7 @@ class Model:
 
         batches = minibatching(x, y, batch_size)
 
-        for _ in (bar := tqdm.tqdm(range(epochs))):
-            bar.set_postfix(self.history.get_history_state())
-
+        for _ in tqdm.tqdm(range(epochs)):
             # validation part
             self.__forward(x_val)
             self.history.update_history(

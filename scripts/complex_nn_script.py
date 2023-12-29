@@ -5,7 +5,6 @@ from tqdm import tqdm
 from losses.complex_mse_loss import ComplexMSE
 from utils.synthetic_data import (
     make_linear_multiclass_dataset,
-    make_linear_binary_dataset,
 )
 from utils.label_utils import cat_to_unit_vector
 from utils.prediction_utils import vec_to_cat
