@@ -1,4 +1,4 @@
-import numpy as np
+import wrapped_numpy as wnp
 
 from activations.activation import Activation
 from custom_types import ComplexMatrix
@@ -6,7 +6,7 @@ from custom_types import ComplexMatrix
 
 class ComplexTanH(Activation):
     def activate(self, x: ComplexMatrix) -> ComplexMatrix:
-        return np.tanh(x)
+        return wnp.tanh(x)
 
     def deactivate(self, x: ComplexMatrix) -> ComplexMatrix:
-        return 1 - self.activate(x) ** 2
+        return wnp.sub(1, wnp.pwr(self.activate(x), 2))

@@ -1,8 +1,7 @@
 from typing import List, Dict, Tuple
-
-import numpy as np
 import tqdm
 
+import wrapped_numpy as wnp
 from history.history import History
 from layers.layer import Layer
 from losses.loss import Loss
@@ -86,7 +85,7 @@ class Model:
             return new_state
 
         for metric in new_state:
-            old_state[metric] += new_state[metric]
+            old_state[metric] = wnp.add(old_state[metric], new_state[metric])
 
         return old_state
 
@@ -94,7 +93,9 @@ class Model:
         self, metric_state: Dict[str, float], num_of_states: int
     ) -> None:
         for metric, state in metric_state.items():
-            self.history.update_history("train_" + metric, state / num_of_states)
+            self.history.update_history(
+                "train_" + metric, wnp.div(state, num_of_states)
+            )
 
     def __update_validation_metric_history(self, metric_state: Dict[str, float]):
         for metric, state in metric_state.items():
@@ -148,7 +149,7 @@ class Model:
 
                 self.optimizer.update_parameters()
 
-            self.history.update_history("train_loss", np.sum(batch_loss))
+            self.history.update_history("train_loss", wnp.axis_sum(batch_loss))
             self.__update_train_metric_history(batch_metrics, len(batches))
 
         self.history.clean_history()

@@ -1,9 +1,8 @@
 from typing import Tuple
-
-import numpy as np
 import numpy.typing as npt
-from custom_types import ComplexMatrix
+import numpy as np
 
+import wrapped_numpy as wnp
 from losses.loss import Loss
 from utils.label_utils import cat_to_arg_intervals
 from custom_types import CategoricalLabels, ComplexMatrix
@@ -19,10 +18,10 @@ class IntervalDistance(Loss):
         # derivative is {1 if |t1 - t2| was used, -1 if 2pi - |t1 - t2| was used}
         # this will return false if it used |t1 - t2| and true if it used 2pi - |t1 - t2|
 
-        difference = np.abs(theta1 - theta2)
-        difference_2pi = 2 * np.pi - difference
+        difference = wnp.abs_(wnp.sub(theta1, theta2))
+        difference_2pi = wnp.sub(2 * np.pi, difference)
 
-        return min(difference, difference_2pi), difference < difference_2pi
+        return wnp.axis_min(difference, difference_2pi), difference < difference_2pi
 
     def __ravel_predictions(
         self, predictions: npt.NDArray[np.float32]
@@ -47,15 +46,15 @@ class IntervalDistance(Loss):
 
         wrong_preds = ~correct_preds & (lower_distances < higher_distances)
 
-        return (
-            np.sum(
+        return wnp.div(
+            wnp.axis_sum(
                 np.where(
                     correct_preds,
                     0.0,
                     np.where(wrong_preds, lower_distances, higher_distances),
                 )
-            )
-            / labels.shape[0]
+            ),
+            labels.shape[0],
         )
 
     def loss_gradient(
@@ -82,7 +81,7 @@ class IntervalDistance(Loss):
 
         wrong_preds = ~correct_preds & mask
 
-        return (
-            np.where(correct_preds, 0, np.where(wrong_preds, 1, -1)).reshape(-1, 1)
-            / labels.shape[0]
+        return wnp.div(
+            np.where(correct_preds, 0, np.where(wrong_preds, 1, -1)).reshape(-1, 1),
+            labels.shape[0],
         )

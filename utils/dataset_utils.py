@@ -1,7 +1,7 @@
 from typing import Tuple
 
 import numpy as np
-
+import wrapped_numpy as wnp
 from custom_types import ComplexMatrix, CategoricalLabels, MiniBatches
 
 
@@ -30,6 +30,14 @@ def shuffle(
 
 
 def normalize(x: ComplexMatrix) -> ComplexMatrix:
-    return (x.real - x.real.min(axis=0)) / (x.real.max(axis=0) - x.real.min(axis=0)) + (
-        x.imag - x.imag.min(axis=0)
-    ) / (x.imag.max(axis=0) - x.imag.min(axis=0)) * 1j
+    return wnp.add(
+        wnp.div(
+            wnp.sub(x.real, wnp.axis_min(x.real, axis=0)),
+            wnp.sub(wnp.axis_max(x.real, axis=0), wnp.axis_min(x.real, axis=0)),
+        ),
+        wnp.div(
+            wnp.sub(x.imag, wnp.axis_min(x.imag, axis=0)),
+            wnp.sub(wnp.axis_max(x.imag, axis=0), wnp.axis_min(x.imag, axis=0)),
+        )
+        * 1j,
+    )

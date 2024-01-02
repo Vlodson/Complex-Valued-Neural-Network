@@ -1,8 +1,8 @@
 from typing import List, Dict
 
-import numpy as np
 import numpy.typing as npt
 
+import wrapped_numpy as wnp
 from layers.layer import Layer
 from optimizers.optimizer import Optimizer
 
@@ -44,20 +44,24 @@ class ADAM(Optimizer):
         }
 
     def update_single_layer_param(self, layer: Layer, param: str) -> None:
-        new_m = self.w1 * self.ms[layer.name][param] + (1 - self.w1) * getattr(
-            layer, param + "_grad"
+        new_m = wnp.add(
+            wnp.mul(self.w1, self.ms[layer.name][param]),
+            wnp.mul((wnp.sub(1, self.w1)), getattr(layer, param + "_grad")),
         )
-        new_v = (
-            self.w2 * self.vs[layer.name][param]
-            + (1 - self.w2) * getattr(layer, param + "_grad") ** 2
+        new_v = wnp.add(
+            wnp.mul(self.w2, self.vs[layer.name][param]),
+            wnp.mul((wnp.sub(1, self.w2)), wnp.pwr(getattr(layer, param + "_grad"), 2)),
         )
 
-        m_hat = new_m / (1 - self.w1)
-        v_hat = np.abs(new_v) / (1 - self.w2)
+        m_hat = wnp.div(new_m, (wnp.sub(1, self.w1)))
+        v_hat = wnp.div(wnp.abs_(new_v), (wnp.sub(1, self.w2)))
 
-        new_param = (
-            getattr(layer, param)
-            - (self.learn_rate / (v_hat + self.eps) ** 0.5) * m_hat
+        new_param = wnp.sub(
+            getattr(layer, param),
+            wnp.mul(
+                wnp.div(self.learn_rate, wnp.pwr(wnp.add(v_hat, self.eps), 0.5)),
+                m_hat,
+            ),
         )
         setattr(layer, param, new_param)
 

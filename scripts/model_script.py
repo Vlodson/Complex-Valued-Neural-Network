@@ -9,7 +9,7 @@ from utils.synthetic_data import make_linear_multiclass_dataset
 
 def main():
     x, y = make_linear_multiclass_dataset()
-    x = x[:, 0] + x[:, 1] * 1j
+    x = wnp.add(x[:, 0], x[:, 1] * 1j)
     x = x.reshape(-1, 1)
 
     plt.scatter(x.real, x.imag, c=y)

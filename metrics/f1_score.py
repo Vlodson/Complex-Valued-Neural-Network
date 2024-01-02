@@ -1,5 +1,5 @@
 from custom_types import CategoricalLabels
-
+import wrapped_numpy as wnp
 from metrics.metric import Metric
 from metrics.precision import Precision
 from metrics.recall import Recall
@@ -13,8 +13,17 @@ class F1(Metric):
     def calculate_metric(
         self, labels: CategoricalLabels, predictions: CategoricalLabels
     ) -> float:
-        return (
-            2
-            * (prec := Precision(self.macro).calculate_metric(labels, predictions))
-            * (rec := Recall(self.macro).calculate_metric(labels, predictions))
-        ) / (prec + rec)
+        return wnp.div(
+            (
+                2
+                * wnp.mul(
+                    (
+                        prec := Precision(self.macro).calculate_metric(
+                            labels, predictions
+                        )
+                    ),
+                    (rec := Recall(self.macro).calculate_metric(labels, predictions)),
+                )
+            ),
+            wnp.add(prec, rec),
+        )

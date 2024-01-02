@@ -1,6 +1,7 @@
 import numpy as np
 import numpy.typing as npt
 
+import wrapped_numpy as wnp
 from custom_types import CategoricalLabels, ComplexMatrix
 
 
@@ -67,4 +68,4 @@ def cat_to_arg(labels: CategoricalLabels) -> npt.NDArray[np.float32]:
 def cat_to_unit_vector(labels: CategoricalLabels) -> ComplexMatrix:
     args = cat_to_arg_centers(labels)
 
-    return np.cos(args) + np.sin(args) * 1.0j
+    return wnp.add(wnp.cos_(args), wnp.sin_(args) * 1.0j)

@@ -1,8 +1,9 @@
-import numpy as np
 from numpy import typing as npt
+import numpy as np
 
+import wrapped_numpy as wnp
 from custom_types import ComplexMatrix, CategoricalLabels
-from utils.label_utils import cat_to_arg_centers, cat_to_unit_vector
+from utils.label_utils import cat_to_unit_vector
 
 
 def arg_to_cat(
@@ -31,4 +32,4 @@ def vec_to_cat(predictions: ComplexMatrix, num_of_cats: int) -> CategoricalLabel
     labels = np.arange(num_of_cats)
     vec_labels = cat_to_unit_vector(labels)
 
-    return np.argmin(np.absolute(predictions - vec_labels), axis=1)
+    return np.argmin(wnp.absolute(wnp.sub(predictions, vec_labels)), axis=1)

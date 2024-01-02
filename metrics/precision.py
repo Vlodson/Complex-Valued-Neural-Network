@@ -1,6 +1,7 @@
 from typing import Dict
 import numpy as np
 
+import wrapped_numpy as wnp
 from metrics.metric import Metric
 from metrics.utils import get_inter_results
 
@@ -13,14 +14,20 @@ class Precision(Metric):
         self.macro = macro
 
     def __macro_precision(self, inter_results: Dict[int, MetricInterResults]) -> float:
-        return sum(
-            (result["correct"] / result["all_clf"]) if result["all_clf"] != 0 else 0
-            for _, result in inter_results.items()
-        ) / len(inter_results)
+        return wnp.div(
+            sum(
+                wnp.div(result["correct"], result["all_clf"])
+                if result["all_clf"] != 0
+                else 0
+                for _, result in inter_results.items()
+            ),
+            len(inter_results),
+        )
 
     def __micro_precision(self, inter_results: Dict[int, MetricInterResults]) -> float:
-        return sum(result["correct"] for _, result in inter_results.items()) / sum(
-            result["all_clf"] for _, result in inter_results.items()
+        return wnp.div(
+            sum(result["correct"] for _, result in inter_results.items()),
+            sum(result["all_clf"] for _, result in inter_results.items()),
         )
 
     def calculate_metric(

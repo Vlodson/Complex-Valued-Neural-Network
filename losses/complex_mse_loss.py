@@ -1,6 +1,4 @@
-import numpy as np
-import numpy.typing as npt
-
+import wrapped_numpy as wnp
 from losses.loss import Loss
 from utils.label_utils import cat_to_unit_vector
 from custom_types import CategoricalLabels, ComplexMatrix
@@ -13,7 +11,9 @@ class ComplexMSE(Loss):
         labels = cat_to_unit_vector(labels)
         predictions = predictions.ravel()
 
-        return np.sum((labels - predictions) ** 2) / (2 * labels.shape[0])
+        return wnp.div(
+            wnp.axis_sum(wnp.pwr(wnp.sub(labels, predictions), 2)), 2 * labels.shape[0]
+        )
 
     def loss_gradient(
         self, labels: CategoricalLabels, predictions: ComplexMatrix
@@ -21,4 +21,4 @@ class ComplexMSE(Loss):
         labels = cat_to_unit_vector(labels)
         predictions = predictions.ravel()
 
-        return ((predictions - labels) / labels.shape[0]).reshape(-1, 1)
+        return wnp.div(wnp.sub(predictions, labels), labels.shape[0]).reshape(-1, 1)

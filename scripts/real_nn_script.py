@@ -1,27 +1,25 @@
 import matplotlib.pyplot as plt
-import numpy as np
 from tqdm import tqdm
+import numpy as np
 
-from utils.synthetic_data import (
-    make_linear_binary_dataset,
-    make_linear_multiclass_dataset,
-)
+import wrapped_numpy as wnp
+from utils.synthetic_data import make_linear_multiclass_dataset
 
 
 def cel(y, yh):
-    return -np.sum(y * np.log(yh)) / yh.shape[0]
+    return wnp.div(-wnp.axis_sum(wnp.mul(y, wnp.log(yh))), yh.shape[0])
 
 
 def dcel(y, yh):
-    return -y / (yh * yh.shape[0])
+    return wnp.div(-y, wnp.mul(yh, yh.shape[0]))
 
 
 def mse(y, yh):
-    return np.sum((y - yh) ** 2) / (2 * y.shape[0])
+    return wnp.div(wnp.axis_sum(wnp.pwr(wnp.sub(y, yh), 2)), 2 * y.shape[0])
 
 
 def dmse(y, yh):
-    return (yh - y) / y.shape[0]
+    return wnp.div(wnp.sub(yh, y), y.shape[0])
 
 
 def relu(x):
@@ -33,23 +31,27 @@ def drelu(x):
 
 
 def softmax(x):
-    maximums = np.max(x, axis=1).reshape(-1, 1)
-    exponents = np.exp(x - maximums)
-    sums = np.sum(exponents, axis=1).reshape(-1, 1)
+    maximums = wnp.axis_max(x, axis=1).reshape(-1, 1)
+    exponents = wnp.exp(wnp.sub(x, maximums))
+    sums = wnp.axis_sum(exponents, axis=1).reshape(-1, 1)
 
-    return exponents / sums
+    return wnp.div(exponents, sums)
 
 
 def dsoftmax(x):
-    return softmax(x) * (1 - softmax(x))
+    return wnp.mul(softmax(x), wnp.sub(1, softmax(x)))
 
 
 def sigmoid(x):
-    return np.where(x >= 0, 1 / (1 + np.exp(-x)), np.exp(x) / (1 + np.exp(x)))
+    return np.where(
+        x >= 0,
+        wnp.div(1, wnp.add(1, wnp.exp(-x))),
+        wnp.div(wnp.exp(x), wnp.add(1, wnp.exp(x))),
+    )
 
 
 def dsigmoid(x):
-    return sigmoid(x) * (1 - sigmoid(x))
+    return wnp.mul(sigmoid(x), wnp.sub(1, sigmoid(x)))
 
 
 def ohe(y):
@@ -79,11 +81,11 @@ def main():
     n = 1e-1
 
     for _ in tqdm(range(10000)):
-        t1 = x @ w1 + b1
+        t1 = wnp.add(wnp.dot(x, w1), b1)
         # a1 = relu(t1)
-        a1 = np.tanh(t1)
+        a1 = wnp.tanh(t1)
 
-        t2 = a1 @ w2 + b2
+        t2 = wnp.add(wnp.dot(a1, w2), b2)
         # yh = softmax(t2)
         yh = sigmoid(t2)
 
@@ -93,21 +95,21 @@ def main():
         dyh = dmse(y, yh)
 
         # dt2 = dsoftmax(t2) * dyh
-        dt2 = dsigmoid(t2) * dyh
-        dw2 = a1.T @ dt2
-        db2 = np.sum(dt2, axis=0)
-        da1 = dt2 @ w2.T
+        dt2 = wnp.mul(dsigmoid(t2), dyh)
+        dw2 = wnp.dot(wnp.transpose(a1), dt2)
+        db2 = wnp.axis_sum(dt2, axis=0)
+        da1 = wnp.dot(dt2, wnp.transpose(w2))
 
         # dt1 = drelu(t1) * da1
-        dt1 = (1 - np.tanh(t1) ** 2) * da1
-        dw1 = x.T @ dt1
-        db1 = np.sum(dt1, axis=0)
+        dt1 = wnp.mul(wnp.sub(1, wnp.pwr(wnp.tanh(t1), 2)), da1)
+        dw1 = wnp.dot(wnp.transpose(x), dt1)
+        db1 = wnp.axis_sum(dt1, axis=0)
 
-        w2 -= n * dw2
-        b2 -= n * db2
+        w2 = wnp.sub(w2, wnp.mul(n, dw2))
+        b2 = wnp.sub(b2, wnp.mul(n, db2))
 
-        w1 -= n * dw1
-        b1 -= n * db1
+        w1 = wnp.sub(w1, wnp.mul(n, dw1))
+        b1 = wnp.sub(b1, wnp.mul(n, db1))
 
     plt.plot(loss)
     plt.show()

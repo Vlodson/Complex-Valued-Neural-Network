@@ -2,6 +2,7 @@ from typing import Tuple
 
 import numpy as np
 
+import wrapped_numpy as wnp
 from custom_types import ComplexMatrix, CategoricalLabels
 from utils.dataset_utils import shuffle, normalize
 
@@ -10,7 +11,7 @@ def __generate_complex_dataset(samples: int, offset: complex):
     real = np.random.uniform(-1, 1, samples)
     imag = np.random.uniform(-1, 1, samples)
 
-    x = real + imag * 1j + offset
+    x = wnp.add(wnp.add(real, imag * 1j), offset)
 
     return x
 
@@ -45,7 +46,9 @@ def make_quadrant_dataset() -> Tuple[ComplexMatrix, CategoricalLabels]:
 
 def __generate_complex_cloud(center, num_samples, radius):
     angles = np.random.uniform(0, 2 * np.pi, num_samples)
-    complex_numbers = center + radius * (np.cos(angles) + 1j * np.sin(angles))
+    complex_numbers = wnp.mul(
+        wnp.add(center, radius), (wnp.add(wnp.cos_(angles), 1j * wnp.sin_(angles)))
+    )
     return complex_numbers
 
 
@@ -78,14 +81,17 @@ def make_cloud_dataset() -> Tuple[ComplexMatrix, CategoricalLabels]:
 def make_linear_binary_dataset():
     np.random.seed(42)
 
-    x1 = np.random.normal(0, 1, (100, 2)) + np.array([5.0, 0.0])
-    x2 = np.random.normal(0, 1, (100, 2)) + np.array([-5.0, 0.0])
+    x1 = wnp.add(np.random.normal(0, 1, (100, 2)), np.array([5.0, 0.0]))
+    x2 = wnp.add(np.random.normal(0, 1, (100, 2)), np.array([-5.0, 0.0]))
     x = np.concatenate([x1, x2], axis=0)
 
     y = np.zeros(x.shape[0])
     y[100:] = 1.0
 
-    x = (x - x.min(axis=0)) / (x.max(axis=0) - x.min(axis=0))
+    x = wnp.div(
+        wnp.sub(x, wnp.axis_min(x, axis=0)),
+        wnp.sub(wnp.axis_max(x, axis=0), wnp.axis_min(x, axis=0)),
+    )
 
     return shuffle(x, y)
 
@@ -93,15 +99,18 @@ def make_linear_binary_dataset():
 def make_linear_multiclass_dataset():
     np.random.seed(42)
 
-    x1 = np.random.normal(0, 1, (1000, 2)) + np.array([-4.0, -4.0])
-    x2 = np.random.normal(0, 1, (1000, 2)) + np.array([0.0, 0.0])
-    x3 = np.random.normal(0, 1, (1000, 2)) + np.array([4.0, 4.0])
+    x1 = wnp.add(np.random.normal(0, 1, (1000, 2)), np.array([-4.0, -4.0]))
+    x2 = wnp.add(np.random.normal(0, 1, (1000, 2)), np.array([0.0, 0.0]))
+    x3 = wnp.add(np.random.normal(0, 1, (1000, 2)), np.array([4.0, 4.0]))
     x = np.concatenate([x1, x2, x3], axis=0)
 
     y = np.zeros(x.shape[0])
     y[1000:2000] = 1.0
     y[2000:] = 2.0
 
-    x = x = (x - x.min(axis=0)) / (x.max(axis=0) - x.min(axis=0))
+    x = wnp.div(
+        wnp.sub(x, wnp.axis_min(x, axis=0)),
+        wnp.sub(wnp.axis_max(x, axis=0), wnp.axis_min(x, axis=0)),
+    )
 
     return shuffle(x, y)
