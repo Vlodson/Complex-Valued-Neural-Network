@@ -104,7 +104,7 @@ class Layer:
         """
         Computes the gradient of the biases. Sets bias_grad
         """
-        self.bias_grad = wnp.axis_sum(self.transfer_grad, axis=0).reshape(1, -1)
+        self.bias_grad = np.sum(self.transfer_grad, axis=0).reshape(1, -1)
 
     def backward(self, y_grad: ComplexMatrix | npt.NDArray[np.float32]) -> None:
         """

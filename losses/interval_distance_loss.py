@@ -47,7 +47,7 @@ class IntervalDistance(Loss):
         wrong_preds = ~correct_preds & (lower_distances < higher_distances)
 
         return wnp.div(
-            wnp.axis_sum(
+            np.sum(
                 wnp.where(
                     correct_preds,
                     0.0,

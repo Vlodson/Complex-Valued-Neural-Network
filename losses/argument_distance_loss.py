@@ -37,7 +37,7 @@ class ArgumentDistance(Loss):
         )
 
         return wnp.div(
-            wnp.axis_sum(self.__angular_distance(predictions, labels)), labels.shape[0]
+            np.sum(self.__angular_distance(predictions, labels)), labels.shape[0]
         )
 
     def loss_gradient(

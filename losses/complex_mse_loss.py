@@ -1,3 +1,4 @@
+import numpy as np
 import wrapped_numpy as wnp
 from losses.loss import Loss
 from utils.label_utils import cat_to_unit_vector
@@ -12,7 +13,7 @@ class ComplexMSE(Loss):
         predictions = predictions.ravel()
 
         return wnp.div(
-            wnp.axis_sum(wnp.pwr(wnp.sub(labels, predictions), 2)), 2 * labels.shape[0]
+            np.sum(wnp.pwr(wnp.sub(labels, predictions), 2)), 2 * labels.shape[0]
         )
 
     def loss_gradient(
