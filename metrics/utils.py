@@ -1,19 +1,19 @@
-import numpy as np
+import wrapped_numpy as wnp
 from custom_types import CategoricalLabels, MetricInterResults
 
 
 def __get_correct(
     predictions: CategoricalLabels, labels: CategoricalLabels, cat: int
 ) -> int:
-    return np.sum((predictions == cat) & (labels == cat))
+    return wnp.sum_((predictions == cat) & (labels == cat))
 
 
 def __get_instances(labels: CategoricalLabels, cat: int) -> int:
-    return np.sum(labels == cat)
+    return wnp.sum_(labels == cat)
 
 
 def __get_all_clf(predictions: CategoricalLabels, cat: int) -> int:
-    return np.sum(predictions == cat)
+    return wnp.sum_(predictions == cat)
 
 
 def get_inter_results(

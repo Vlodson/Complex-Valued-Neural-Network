@@ -1,4 +1,3 @@
-import numpy as np
 import wrapped_numpy as wnp
 from metrics.metric import Metric
 
@@ -9,4 +8,4 @@ class Accuracy(Metric):
     def calculate_metric(
         self, labels: CategoricalLabels, predictions: CategoricalLabels
     ) -> float:
-        return wnp.div(np.sum(labels == predictions), labels.shape[0])
+        return wnp.div(wnp.sum_(labels == predictions), labels.shape[0])

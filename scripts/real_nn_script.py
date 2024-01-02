@@ -7,7 +7,7 @@ from utils.synthetic_data import make_linear_multiclass_dataset
 
 
 def cel(y, yh):
-    return wnp.div(-np.sum(wnp.mul(y, wnp.log(yh))), yh.shape[0])
+    return wnp.div(-wnp.sum_(wnp.mul(y, wnp.log(yh))), yh.shape[0])
 
 
 def dcel(y, yh):
@@ -15,7 +15,7 @@ def dcel(y, yh):
 
 
 def mse(y, yh):
-    return wnp.div(np.sum(wnp.pwr(wnp.sub(y, yh), 2)), 2 * y.shape[0])
+    return wnp.div(wnp.sum_(wnp.pwr(wnp.sub(y, yh), 2)), 2 * y.shape[0])
 
 
 def dmse(y, yh):
@@ -33,7 +33,7 @@ def drelu(x):
 def softmax(x):
     maximums = np.max(x, axis=1).reshape(-1, 1)
     exponents = wnp.exp(wnp.sub(x, maximums))
-    sums = np.sum(exponents, axis=1).reshape(-1, 1)
+    sums = wnp.axis_sum(exponents, axis=1).reshape(-1, 1)
 
     return wnp.div(exponents, sums)
 
@@ -97,13 +97,13 @@ def main():
         # dt2 = dsoftmax(t2) * dyh
         dt2 = wnp.mul(dsigmoid(t2), dyh)
         dw2 = wnp.dot(wnp.transpose(a1), dt2)
-        db2 = np.sum(dt2, axis=0)
+        db2 = wnp.axis_sum(dt2, axis=0)
         da1 = wnp.dot(dt2, wnp.transpose(w2))
 
         # dt1 = drelu(t1) * da1
         dt1 = wnp.mul(wnp.sub(1, wnp.pwr(wnp.tanh(t1), 2)), da1)
         dw1 = wnp.dot(wnp.transpose(x), dt1)
-        db1 = np.sum(dt1, axis=0)
+        db1 = wnp.axis_sum(dt1, axis=0)
 
         w2 = wnp.sub(w2, wnp.mul(n, dw2))
         b2 = wnp.sub(b2, wnp.mul(n, db2))

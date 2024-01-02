@@ -57,12 +57,12 @@ def main():
 
         dt2 = wnp.mul(dlinear(t2), dyh)
         dw2 = wnp.dot(wnp.transpose(a1), dt2)
-        db2 = np.sum(dt2, axis=0)
+        db2 = wnp.axis_sum(dt2, axis=0)
         da1 = wnp.dot(dt2, wnp.transpose(w2))
 
         dt1 = wnp.mul(dlinear(t1), da1)
         dw1 = wnp.dot(wnp.transpose(x), dt1)
-        db1 = np.sum(dt1, axis=0)
+        db1 = wnp.axis_sum(dt1, axis=0)
 
         w2 = wnp.sub(w2, wnp.mul(n, dw2))
         b2 = wnp.sub(b2, wnp.mul(n, db2))
@@ -78,7 +78,7 @@ def main():
     print(f"{cat_to_unit_vector(y[:5])}\n{yh[:5]}")
 
     preds = vec_to_cat(yh, 3)
-    print(wnp.div(np.sum(preds == y), y.shape[0]))
+    print(wnp.div(wnp.sum_(preds == y), y.shape[0]))
 
 
 if __name__ == "__main__":

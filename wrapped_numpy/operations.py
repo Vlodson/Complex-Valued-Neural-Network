@@ -9,9 +9,14 @@ def absolute(x: npt.ArrayLike) -> npt.NDArray:
     return np.absolute(x)
 
 
-@njit
+@njit(fastmath=True)
 def axis_sum(x: npt.ArrayLike, axis: Optional[int] = None) -> npt.NDArray:
-    return np.sum(x, axis=axis) if axis is not None else np.sum(x)
+    return x.sum(axis=axis)
+
+
+@njit(fastmath=True)
+def sum_(x: npt.ArrayLike) -> npt.NDArray:
+    return np.sum(x)
 
 
 @njit(fastmath=True)
