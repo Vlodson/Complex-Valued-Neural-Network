@@ -15,7 +15,7 @@ def cat_to_arg_intervals(
     """
     new_labels = np.empty(shape=(labels.shape[0], 2), dtype=np.float32)
 
-    categories = np.unique(labels)
+    categories = wnp.unique(labels)
 
     interval_edges = np.linspace(0, 2 * np.pi, categories.shape[0] + 1)
 
@@ -38,7 +38,7 @@ def cat_to_arg_centers(labels: CategoricalLabels) -> npt.NDArray[np.float32]:
     """
     new_labels = np.empty_like(labels)
 
-    cats = np.unique(labels)
+    cats = wnp.unique(labels)
 
     intervals = np.linspace(0, 2 * np.pi, cats.shape[0] + 1)
 
@@ -55,7 +55,7 @@ def cat_to_arg(labels: CategoricalLabels) -> npt.NDArray[np.float32]:
     """
     new_labels = np.empty_like(labels).astype(np.float32)
 
-    cats = np.unique(labels)
+    cats = wnp.unique(labels)
 
     intervals = np.linspace(0, 2 * np.pi, cats.shape[0] + 1)
 

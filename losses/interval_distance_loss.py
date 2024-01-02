@@ -48,10 +48,10 @@ class IntervalDistance(Loss):
 
         return wnp.div(
             wnp.axis_sum(
-                np.where(
+                wnp.where(
                     correct_preds,
                     0.0,
-                    np.where(wrong_preds, lower_distances, higher_distances),
+                    wnp.where(wrong_preds, lower_distances, higher_distances),
                 )
             ),
             labels.shape[0],
@@ -73,7 +73,7 @@ class IntervalDistance(Loss):
             predictions, labels[:, 1]
         )
 
-        mask = np.where(
+        mask = wnp.where(
             lower_distances < higher_distances,
             lower_distances_bools,
             higher_distances_bools,
@@ -82,6 +82,6 @@ class IntervalDistance(Loss):
         wrong_preds = ~correct_preds & mask
 
         return wnp.div(
-            np.where(correct_preds, 0, np.where(wrong_preds, 1, -1)).reshape(-1, 1),
+            wnp.where(correct_preds, 0, wnp.where(wrong_preds, 1, -1)).reshape(-1, 1),
             labels.shape[0],
         )

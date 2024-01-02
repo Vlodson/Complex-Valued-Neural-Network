@@ -35,7 +35,7 @@ class Precision(Metric):
     ) -> float:
         inter_results = {
             cat: get_inter_results(predictions, labels, cat)
-            for cat in np.unique(labels)
+            for cat in wnp.unique(labels)
         }
 
         return (

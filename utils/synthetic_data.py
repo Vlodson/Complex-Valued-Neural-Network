@@ -19,16 +19,16 @@ def __generate_complex_dataset(samples: int, offset: complex):
 def __assign_labels(x: ComplexMatrix):
     labels = np.zeros_like(x, dtype=int)
 
-    labels[(np.real(x) >= 0) & (np.imag(x) >= 0)] = 0
-    labels[(np.real(x) < 0) & (np.imag(x) >= 0)] = 1
-    labels[(np.real(x) < 0) & (np.imag(x) < 0)] = 2
-    labels[(np.real(x) >= 0) & (np.imag(x) < 0)] = 3
+    labels[(wnp.real(x) >= 0) & (wnp.imag(x) >= 0)] = 0
+    labels[(wnp.real(x) < 0) & (wnp.imag(x) >= 0)] = 1
+    labels[(wnp.real(x) < 0) & (wnp.imag(x) < 0)] = 2
+    labels[(wnp.real(x) >= 0) & (wnp.imag(x) < 0)] = 3
 
     return labels
 
 
 def make_quadrant_dataset() -> Tuple[ComplexMatrix, CategoricalLabels]:
-    x = np.concatenate(
+    x = wnp.concatenate(
         [
             __generate_complex_dataset(100, 2 + 2j),
             __generate_complex_dataset(100, 2 - 2j),
@@ -63,8 +63,8 @@ def make_cloud_dataset() -> Tuple[ComplexMatrix, CategoricalLabels]:
     cloud3 = __generate_complex_cloud(centers[2], num_samples_per_cloud, radii[2])
     cloud4 = __generate_complex_cloud(centers[3], num_samples_per_cloud, radii[3])
 
-    complex_dataset = np.concatenate([cloud1, cloud2, cloud3, cloud4]).reshape(-1, 1)
-    labels = np.concatenate(
+    complex_dataset = wnp.concatenate([cloud1, cloud2, cloud3, cloud4]).reshape(-1, 1)
+    labels = wnp.concatenate(
         [
             np.zeros(num_samples_per_cloud),
             np.ones(num_samples_per_cloud),
@@ -83,7 +83,7 @@ def make_linear_binary_dataset():
 
     x1 = wnp.add(np.random.normal(0, 1, (100, 2)), np.array([5.0, 0.0]))
     x2 = wnp.add(np.random.normal(0, 1, (100, 2)), np.array([-5.0, 0.0]))
-    x = np.concatenate([x1, x2], axis=0)
+    x = wnp.concatenate([x1, x2], axis=0)
 
     y = np.zeros(x.shape[0])
     y[100:] = 1.0
@@ -102,7 +102,7 @@ def make_linear_multiclass_dataset():
     x1 = wnp.add(np.random.normal(0, 1, (1000, 2)), np.array([-4.0, -4.0]))
     x2 = wnp.add(np.random.normal(0, 1, (1000, 2)), np.array([0.0, 0.0]))
     x3 = wnp.add(np.random.normal(0, 1, (1000, 2)), np.array([4.0, 4.0]))
-    x = np.concatenate([x1, x2, x3], axis=0)
+    x = wnp.concatenate([x1, x2, x3], axis=0)
 
     y = np.zeros(x.shape[0])
     y[1000:2000] = 1.0

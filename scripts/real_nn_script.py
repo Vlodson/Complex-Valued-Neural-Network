@@ -23,11 +23,11 @@ def dmse(y, yh):
 
 
 def relu(x):
-    return np.where(x >= 0, x, 0.0)
+    return wnp.where(x >= 0, x, 0.0)
 
 
 def drelu(x):
-    return np.where(x >= 0, 1.0, 0.0)
+    return wnp.where(x >= 0, 1.0, 0.0)
 
 
 def softmax(x):
@@ -43,7 +43,7 @@ def dsoftmax(x):
 
 
 def sigmoid(x):
-    return np.where(
+    return wnp.where(
         x >= 0,
         wnp.div(1, wnp.add(1, wnp.exp(-x))),
         wnp.div(wnp.exp(x), wnp.add(1, wnp.exp(x))),
@@ -56,7 +56,7 @@ def dsigmoid(x):
 
 def ohe(y):
     y = y.ravel().astype(np.int_)
-    num_classes = np.unique(y).shape[0]
+    num_classes = wnp.unique(y).shape[0]
 
     one_hot_encoded = np.zeros((y.shape[0], num_classes))
     one_hot_encoded[np.arange(y.shape[0]), y] = 1

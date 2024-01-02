@@ -1,3 +1,4 @@
+from typing import Optional
 import numba
 import numpy as np
 import numpy.typing as npt
@@ -33,5 +34,9 @@ def where(condition: npt.ArrayLike, x: npt.ArrayLike, y: npt.ArrayLike) -> npt.N
 
 # arraylike here being an arraylike of arraylikes
 @numba.jit(nopython=True)
-def concatenate(arrays: npt.ArrayLike, axis: int) -> npt.NDArray:
-    return concatenate(arrays=arrays, axis=axis)
+def concatenate(arrays: npt.ArrayLike, axis: Optional[int] = None) -> npt.NDArray:
+    return (
+        np.concatenate(arrays=arrays, axis=axis)
+        if axis is not None
+        else np.concatenate(arrays)
+    )

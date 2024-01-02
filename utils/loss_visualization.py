@@ -2,6 +2,7 @@ from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
+import wrapped_numpy as wnp
 
 
 def plot_real_loss(loss: List[float]) -> None:
@@ -15,7 +16,7 @@ def plot_real_loss(loss: List[float]) -> None:
 def plot_complex_loss(loss: List[complex]) -> None:
     loss_arr = np.array(loss)
 
-    plt.scatter(loss_arr.real, loss_arr.imag, c=np.arange(loss_arr.shape[0]))
+    plt.scatter(wnp.real(loss_arr), wnp.imag(loss_arr), c=np.arange(loss_arr.shape[0]))
     plt.colorbar(label="Epochs")
     plt.title("Loss")
     plt.xlabel("real")

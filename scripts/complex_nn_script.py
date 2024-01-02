@@ -32,7 +32,7 @@ def main():
     x = wnp.add(x[:, 0], x[:, 1] * 1j)
     x = x.reshape(-1, 1)
 
-    plt.scatter(x.real, x.imag, c=y)
+    plt.scatter(wnp.real(x), wnp.imag(x), c=y)
     plt.show()
 
     w1 = wnp.add(
@@ -79,7 +79,7 @@ def main():
         b1 = wnp.sub(b1, wnp.mul(n, db1))
 
     losses = np.array(losses)
-    plt.scatter(losses.real, losses.imag, c=np.arange(losses.shape[0]))
+    plt.scatter(wnp.real(losses), wnp.imag(losses), c=np.arange(losses.shape[0]))
     plt.colorbar(label="Epochs")
     plt.show()
 

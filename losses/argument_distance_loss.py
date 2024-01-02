@@ -14,7 +14,7 @@ class ArgumentDistance(Loss):
         distance = wnp.abs_(wnp.sub(theta1, theta2))
         distance_2pi = wnp.sub(2 * np.pi, distance)
 
-        return np.where(distance < distance_2pi, distance, distance_2pi)
+        return wnp.where(distance < distance_2pi, distance, distance_2pi)
 
     def __angular_distance_derivative(
         self, theta1: npt.NDArray[np.float32], theta2: npt.NDArray[np.float32]
@@ -22,7 +22,7 @@ class ArgumentDistance(Loss):
         distance = wnp.abs_(wnp.sub(theta1, theta2))
         distance_2pi = wnp.sub(2 * np.pi, distance)
 
-        return np.where(
+        return wnp.where(
             distance < distance_2pi,
             wnp.sign(wnp.sub(theta1, theta2)),
             -wnp.sign(wnp.sub(theta1, theta2)),

@@ -116,7 +116,7 @@ class Model:
         x_val: ComplexMatrix,
         y_val: CategoricalLabels,
     ) -> None:
-        num_of_cats = np.unique(y).shape[0]
+        num_of_cats = wnp.unique(y).shape[0]
 
         batches = minibatching(x, y, batch_size)
 

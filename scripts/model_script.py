@@ -1,5 +1,6 @@
 from matplotlib import pyplot as plt
 
+import wrapped_numpy as wnp
 from layers.layer import Layer
 from model.model import Model
 from optimizers.adam import ADAM
@@ -12,7 +13,7 @@ def main():
     x = wnp.add(x[:, 0], x[:, 1] * 1j)
     x = x.reshape(-1, 1)
 
-    plt.scatter(x.real, x.imag, c=y)
+    plt.scatter(wnp.real(x), wnp.imag(x), c=y)
     plt.show()
 
     x_val, y_val = x[2700:], y[2700:]
