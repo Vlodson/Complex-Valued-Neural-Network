@@ -71,11 +71,11 @@ def main():
 
     y = ohe(y.ravel())
 
-    w1 = np.random.uniform(-1, 1, (2, 3))
-    b1 = np.random.uniform(-1, 1, (1, 3))
+    w1 = wnp.uniform(-1, 1, (2, 3))
+    b1 = wnp.uniform(-1, 1, (1, 3))
 
-    w2 = np.random.uniform(-1, 1, (3, 3))
-    b2 = np.random.uniform(-1, 1, (1, 3))
+    w2 = wnp.uniform(-1, 1, (3, 3))
+    b2 = wnp.uniform(-1, 1, (1, 3))
 
     loss = []
     n = 1e-1

@@ -8,8 +8,8 @@ from utils.dataset_utils import shuffle, normalize
 
 
 def __generate_complex_dataset(samples: int, offset: complex):
-    real = np.random.uniform(-1, 1, samples)
-    imag = np.random.uniform(-1, 1, samples)
+    real = wnp.uniform(-1, 1, samples)
+    imag = wnp.uniform(-1, 1, samples)
 
     x = wnp.add(wnp.add(real, imag * 1j), offset)
 
@@ -17,7 +17,7 @@ def __generate_complex_dataset(samples: int, offset: complex):
 
 
 def __assign_labels(x: ComplexMatrix):
-    labels = np.zeros_like(x, dtype=int)
+    labels = wnp.zeros_like(x, dtype=int)
 
     labels[(wnp.real(x) >= 0) & (wnp.imag(x) >= 0)] = 0
     labels[(wnp.real(x) < 0) & (wnp.imag(x) >= 0)] = 1
@@ -45,7 +45,7 @@ def make_quadrant_dataset() -> Tuple[ComplexMatrix, CategoricalLabels]:
 
 
 def __generate_complex_cloud(center, num_samples, radius):
-    angles = np.random.uniform(0, 2 * np.pi, num_samples)
+    angles = wnp.uniform(0, 2 * np.pi, num_samples)
     complex_numbers = wnp.mul(
         wnp.add(center, radius), (wnp.add(wnp.cos_(angles), 1j * wnp.sin_(angles)))
     )

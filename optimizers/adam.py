@@ -30,15 +30,15 @@ class ADAM(Optimizer):
 
         self.ms = {
             layer.name: {
-                "weights": np.zeros_like(layer.weights),
-                "bias": np.zeros_like(layer.bias),
+                "weights": wnp.zeros_like(layer.weights),
+                "bias": wnp.zeros_like(layer.bias),
             }
             for layer in layers
         }
         self.vs = {
             layer.name: {
-                "weights": np.zeros_like(layer.weights),
-                "bias": np.zeros_like(layer.bias),
+                "weights": wnp.zeros_like(layer.weights),
+                "bias": wnp.zeros_like(layer.bias),
             }
             for layer in layers
         }

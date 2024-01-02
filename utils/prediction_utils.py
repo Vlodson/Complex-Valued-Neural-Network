@@ -12,9 +12,9 @@ def arg_to_cat(
     """
     Turns arguments to categorical values based on the number of classes
     """
-    cat_predictions = np.empty(shape=(arguments.shape[0],), dtype=np.int_)
+    cat_predictions = wnp.empty(shape=(arguments.shape[0],), dtype=np.int_)
 
-    interval_edges = np.linspace(0, 2 * np.pi, num_of_cats + 1)
+    interval_edges = wnp.linspace(0, 2 * np.pi, num_of_cats + 1)
 
     intervals = {
         cat: (interval_edges[i], interval_edges[i + 1])

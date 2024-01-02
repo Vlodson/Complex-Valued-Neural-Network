@@ -35,19 +35,11 @@ def main():
     plt.scatter(wnp.real(x), wnp.imag(x), c=y)
     plt.show()
 
-    w1 = wnp.add(
-        np.random.uniform(-1, 1, (1, 3)), np.random.uniform(-1, 1, (1, 3)) * 1.0j
-    )
-    b1 = wnp.add(
-        np.random.uniform(-1, 1, (1, 3)), np.random.uniform(-1, 1, (1, 3)) * 1.0j
-    )
+    w1 = wnp.add(wnp.uniform(-1, 1, (1, 3)), wnp.uniform(-1, 1, (1, 3)) * 1.0j)
+    b1 = wnp.add(wnp.uniform(-1, 1, (1, 3)), wnp.uniform(-1, 1, (1, 3)) * 1.0j)
 
-    w2 = wnp.add(
-        np.random.uniform(-1, 1, (3, 1)), np.random.uniform(-1, 1, (3, 1)) * 1.0j
-    )
-    b2 = wnp.add(
-        np.random.uniform(-1, 1, (1, 1)), np.random.uniform(-1, 1, (1, 1)) * 1.0j
-    )
+    w2 = wnp.add(wnp.uniform(-1, 1, (3, 1)), wnp.uniform(-1, 1, (3, 1)) * 1.0j)
+    b2 = wnp.add(wnp.uniform(-1, 1, (1, 1)), wnp.uniform(-1, 1, (1, 1)) * 1.0j)
 
     loss = ComplexMSE()
     losses = []
