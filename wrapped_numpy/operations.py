@@ -1,4 +1,3 @@
-from typing import Optional
 from numba import njit
 import numpy as np
 import numpy.typing as npt
@@ -10,7 +9,7 @@ def absolute(x: npt.ArrayLike) -> npt.NDArray:
 
 
 @njit(fastmath=True)
-def axis_sum(x: npt.ArrayLike, axis: Optional[int] = None) -> npt.NDArray:
+def axis_sum(x: npt.ArrayLike, axis: int) -> npt.NDArray:
     return x.sum(axis=axis)
 
 
@@ -72,16 +71,6 @@ def exp(x: npt.ArrayLike) -> npt.NDArray:
 @njit(fastmath=True)
 def log(x: npt.ArrayLike) -> npt.NDArray:
     return np.log(x)
-
-
-@njit
-def axis_max(x: npt.ArrayLike, axis: Optional[int] = None) -> npt.NDArray:
-    return np.max(x, axis=axis) if x is not None else np.max(x)
-
-
-@njit
-def axis_min(x: npt.ArrayLike, axis: Optional[int] = None) -> npt.NDArray:
-    return np.min(x, axis=axis) if x is not None else np.min(x)
 
 
 @njit(fastmath=True)
