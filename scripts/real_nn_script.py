@@ -31,7 +31,7 @@ def drelu(x):
 
 
 def softmax(x):
-    maximums = wnp.axis_max(x, axis=1).reshape(-1, 1)
+    maximums = np.max(x, axis=1).reshape(-1, 1)
     exponents = wnp.exp(wnp.sub(x, maximums))
     sums = wnp.axis_sum(exponents, axis=1).reshape(-1, 1)
 

@@ -21,7 +21,7 @@ class IntervalDistance(Loss):
         difference = wnp.abs_(wnp.sub(theta1, theta2))
         difference_2pi = wnp.sub(2 * np.pi, difference)
 
-        return wnp.axis_min(difference, difference_2pi), difference < difference_2pi
+        return np.min(difference, difference_2pi), difference < difference_2pi
 
     def __ravel_predictions(
         self, predictions: npt.NDArray[np.float32]

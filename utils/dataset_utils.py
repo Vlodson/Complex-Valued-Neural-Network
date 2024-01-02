@@ -32,16 +32,12 @@ def shuffle(
 def normalize(x: ComplexMatrix) -> ComplexMatrix:
     return wnp.add(
         wnp.div(
-            wnp.sub(wnp.real(x), wnp.axis_min(wnp.real(x), axis=0)),
-            wnp.sub(
-                wnp.axis_max(wnp.real(x), axis=0), wnp.axis_min(wnp.real(x), axis=0)
-            ),
+            wnp.sub(wnp.real(x), np.min(wnp.real(x), axis=0)),
+            wnp.sub(np.max(wnp.real(x), axis=0), np.min(wnp.real(x), axis=0)),
         ),
         wnp.div(
-            wnp.sub(wnp.imag(x), wnp.axis_min(wnp.imag(x), axis=0)),
-            wnp.sub(
-                wnp.axis_max(wnp.imag(x), axis=0), wnp.axis_min(wnp.imag(x), axis=0)
-            ),
+            wnp.sub(wnp.imag(x), np.min(wnp.imag(x), axis=0)),
+            wnp.sub(np.max(wnp.imag(x), axis=0), np.min(wnp.imag(x), axis=0)),
         )
         * 1j,
     )
