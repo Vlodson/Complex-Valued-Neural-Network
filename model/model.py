@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict
 import tqdm
 import numpy as np
 
@@ -102,11 +102,14 @@ class Model:
         for metric, state in metric_state.items():
             self.history.update_history("val_" + metric, state)
 
-    def test(
-        self, x: ComplexMatrix, y: CategoricalLabels
-    ) -> Tuple[float, Dict[str, float]]:
-        # does forward on x, evaluates loss and metrics on y returns those
-        raise NotImplementedError
+    def test(self, x: ComplexMatrix, y: CategoricalLabels) -> Dict[str, float]:
+        res = {"loss": self.compute_loss(y, self.predict(x))}
+        res.update(
+            self.compute_metrics(
+                y, vec_to_cat(self.layers[-1].y, num_of_cats=wnp.unique(y).shape[0])
+            )
+        )
+        return res
 
     def train(
         self,

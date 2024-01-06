@@ -1,6 +1,7 @@
 from typing import Dict, List, Optional
 
 from metrics.metric import Metric
+from utils.plotting import plot_complex_loss, plot_real_metrics
 
 
 class History:
@@ -22,7 +23,16 @@ class History:
     def get_history_state(self) -> Dict[str, Optional[float]]:
         return {key: value[-1] for key, value in self.history.items()}
 
-    def clean_history(self):
+    def clean_history(self) -> None:
         # remove the Nones
         for metric, metric_values in self.history.items():
             self.history[metric] = metric_values[1:]
+
+    def plot_losses(self) -> None:
+        # use only after Nones are removed
+        plot_complex_loss(self.history["train_loss"])
+        plot_complex_loss(self.history["val_loss"])
+
+    def plot_metrics(self) -> None:
+        for metric in [metric for metric in self.history if "loss" not in metric]:
+            plot_real_metrics(self.history[metric], metric)
