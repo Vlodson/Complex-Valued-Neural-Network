@@ -6,6 +6,8 @@ import wrapped_numpy as wnp
 from custom_types import ComplexMatrix, CategoricalLabels
 from utils.dataset_utils import shuffle, normalize
 
+np.random.seed(42)
+
 
 def __generate_complex_dataset(samples: int, offset: complex):
     real = wnp.uniform(-1, 1, samples)
@@ -17,7 +19,7 @@ def __generate_complex_dataset(samples: int, offset: complex):
 
 
 def __assign_labels(x: ComplexMatrix):
-    labels = wnp.zeros_like(x, dtype=int)
+    labels = wnp.zeros_like(x)
 
     labels[(wnp.real(x) >= 0) & (wnp.imag(x) >= 0)] = 0
     labels[(wnp.real(x) < 0) & (wnp.imag(x) >= 0)] = 1

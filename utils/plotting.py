@@ -22,3 +22,11 @@ def plot_complex_loss(loss: List[complex]) -> None:
     plt.xlabel("real")
     plt.ylabel("imaginary")
     plt.show()
+
+
+def plot_real_metrics(metrics: List[float], name: str) -> None:
+    plt.plot(metrics)
+    plt.title(f"Metric: {name}")
+    plt.xlabel("epochs")
+    plt.ylabel(name)
+    plt.show()
