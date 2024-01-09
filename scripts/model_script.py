@@ -4,7 +4,6 @@ import wrapped_numpy as wnp
 from layers.layer import Layer
 from model.model import Model
 from optimizers.adam import ADAM
-from utils.loss_visualization import plot_complex_loss
 from utils.synthetic_data import make_linear_multiclass_dataset
 
 
@@ -32,11 +31,11 @@ def main():
     )
 
     model.train(
-        x=x_train, y=y_train, batch_size=64, epochs=1024, x_val=x_val, y_val=y_val
+        x=x_train, y=y_train, batch_size=64, epochs=512, x_val=x_val, y_val=y_val
     )
 
-    plot_complex_loss(model.history.history["train_loss"])
-    plot_complex_loss(model.history.history["val_loss"])
+    model.history.plot_losses()
+    print(model.test(x_train[:100], y_train[:100]))
 
 
 if __name__ == "__main__":
