@@ -2,8 +2,8 @@ from typing import Optional
 
 import numpy as np
 import numpy.typing as npt
-import wrapped_numpy as wnp
 
+import wrapped_numpy as wnp
 from custom_types import ComplexMatrix
 from activations.activation import Activation
 from activations.activations_dict import ACTIVATIONS

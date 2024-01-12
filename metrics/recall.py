@@ -1,5 +1,4 @@
 from typing import Dict
-import numpy as np
 
 import wrapped_numpy as wnp
 from metrics.metric import Metric
