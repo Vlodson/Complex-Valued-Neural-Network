@@ -27,7 +27,7 @@ def imag(x: ComplexMatrix) -> npt.NDArray:
     return np.imag(x)
 
 
-@njit(parallel=True)
+@njit
 def where(condition: npt.ArrayLike, x: npt.ArrayLike, y: npt.ArrayLike) -> npt.NDArray:
     return np.where(condition=condition, x=x, y=y)
 
