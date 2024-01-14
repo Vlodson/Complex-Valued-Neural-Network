@@ -37,3 +37,46 @@ def binary_classification(features: int) -> Tuple[ComplexMatrix, CategoricalLabe
     y = np.concatenate([y1, y2], axis=0)
 
     return shuffle(normalize(x), y)
+
+
+def __nroots_of_i(n: int) -> npt.NDArray:
+    root = np.abs(1.0j) ** (1.0 / n)
+    period = np.angle(1.0j)
+
+    return np.array(
+        list(
+            map(lambda k: root * np.exp((period + 2 * k * np.pi) * 1.0j / n), range(n))
+        )
+    )
+
+
+def multiclass_classification(
+    features: int, classes: int
+) -> Tuple[ComplexMatrix, CategoricalLabels]:
+    points_per_class = int(1000 / classes)
+
+    # make the unit circle bigger to give more space for distances between clusters
+    # drops off the more clusters you have
+    centers = __nroots_of_i(classes) * 7
+
+    x = np.concatenate(
+        [
+            np.concatenate(
+                [
+                    __make_comlpex_feature(
+                        points=points_per_class, center=(center.real, center.imag)
+                    )
+                    for _ in range(features)
+                ],
+                axis=1,
+            )
+            for center in centers
+        ],
+        axis=0,
+    )
+
+    y = np.concatenate(
+        [np.array([cat] * points_per_class) for cat in range(classes)], axis=0
+    )
+
+    return shuffle(normalize(x), y)
