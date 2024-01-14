@@ -152,7 +152,9 @@ class Model:
 
                 self.optimizer.update_parameters()
 
-            self.history.update_history("train_loss", sum(batch_loss))
+            self.history.update_history(
+                "train_loss", wnp.div(sum(batch_loss), len(batch_loss))
+            )
             self.__update_train_metric_history(batch_metrics, len(batches))
 
         self.history.clean_history()
