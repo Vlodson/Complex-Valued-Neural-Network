@@ -123,7 +123,18 @@ class Model:
 
         batches = minibatching(x, y, batch_size)
 
-        for _ in tqdm.tqdm(range(epochs)):
+        for _ in (tqdm_bar := tqdm.tqdm(range(epochs))):
+            tqdm_bar.set_postfix(
+                {
+                    "train_loss": f"{self.history.history['train_loss'][-1]:.2f}"
+                    if self.history.history["train_loss"][-1] is not None
+                    else "None",
+                    "val_loss": f"{self.history.history['val_loss'][-1]:.2f}"
+                    if self.history.history["val_loss"][-1] is not None
+                    else "None",
+                }
+            )
+
             # validation part
             self.__forward(x_val)
             self.history.update_history(
