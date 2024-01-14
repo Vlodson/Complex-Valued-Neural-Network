@@ -1,26 +1,26 @@
-from matplotlib import pyplot as plt
-
-import wrapped_numpy as wnp
 from layers.layer import Layer
 from model.model import Model
 from optimizers.adam import ADAM
-from utils.synthetic_data import make_linear_multiclass_dataset
+from utils.synthetic_data import binary_classification
 
 
 def main():
-    x, y = make_linear_multiclass_dataset()
-    x = wnp.add(x[:, 0], x[:, 1] * 1j)
-    x = x.reshape(-1, 1)
+    features = 5
 
-    plt.scatter(wnp.real(x), wnp.imag(x), c=y)
-    plt.show()
+    x, y = binary_classification(features=features)
 
-    x_val, y_val = x[2700:], y[2700:]
-    x_train, y_train = x[:2700], y[:2700]
+    test_cutoff = int(x.shape[0] * 0.8)
+    x_test, y_test = x[test_cutoff:], y[test_cutoff:]
+
+    x_train, y_train = x[:test_cutoff], y[:test_cutoff]
+
+    val_cutoff = int(x_train.shape[0] * 0.8)
+    x_val, y_val = x_train[val_cutoff:], y_train[val_cutoff:]
+    x_train, y_train = x_train[:val_cutoff], y_train[:val_cutoff]
 
     model = Model(
         [
-            Layer(neurons=3, activation="linsca", input_shape=1),
+            Layer(neurons=3, activation="linsca", input_shape=x_train.shape[1]),
             Layer(neurons=1, activation="linsca"),
         ]
     )
@@ -35,7 +35,7 @@ def main():
     )
 
     model.history.plot_losses()
-    print(model.test(x_train[:100], y_train[:100]))
+    print(model.test(x_test, y_test))
 
 
 if __name__ == "__main__":

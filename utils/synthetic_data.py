@@ -2,117 +2,30 @@ from typing import Tuple
 
 import numpy as np
 
-import wrapped_numpy as wnp
 from custom_types import ComplexMatrix, CategoricalLabels
 from utils.dataset_utils import shuffle, normalize
 
 np.random.seed(42)
 
 
-def __generate_complex_dataset(samples: int, offset: complex):
-    real = wnp.uniform(-1, 1, samples)
-    imag = wnp.uniform(-1, 1, samples)
+def __make_comlpex_feature(points: int, center: float) -> ComplexMatrix:
+    c = np.random.normal(center, 1, size=(points, 2))
 
-    x = wnp.add(wnp.add(real, imag * 1j), offset)
-
-    return x
+    return (c[..., 0] + 1j * c[..., 1]).reshape(-1, 1)
 
 
-def __assign_labels(x: ComplexMatrix):
-    labels = wnp.zeros_like(x)
-
-    labels[(wnp.real(x) >= 0) & (wnp.imag(x) >= 0)] = 0
-    labels[(wnp.real(x) < 0) & (wnp.imag(x) >= 0)] = 1
-    labels[(wnp.real(x) < 0) & (wnp.imag(x) < 0)] = 2
-    labels[(wnp.real(x) >= 0) & (wnp.imag(x) < 0)] = 3
-
-    return labels
-
-
-def make_quadrant_dataset() -> Tuple[ComplexMatrix, CategoricalLabels]:
-    x = np.concatenate(
-        [
-            __generate_complex_dataset(100, 2 + 2j),
-            __generate_complex_dataset(100, 2 - 2j),
-            __generate_complex_dataset(100, -2 - 2j),
-            __generate_complex_dataset(100, -2 + 2j),
-        ],
-        axis=0,
+def binary_classification(features: int) -> Tuple[ComplexMatrix, CategoricalLabels]:
+    x1 = np.concatenate(
+        [__make_comlpex_feature(points=1000, center=-5) for _ in range(features)],
+        axis=1,
     )
-    y = __assign_labels(x).reshape(-1, 1)
-
-    x = normalize(x).reshape(-1, 1)
-
-    return shuffle(x, y)
-
-
-def __generate_complex_cloud(center, num_samples, radius):
-    angles = wnp.uniform(0, 2 * np.pi, num_samples)
-    complex_numbers = wnp.mul(
-        wnp.add(center, radius), (wnp.add(wnp.cos_(angles), 1j * wnp.sin_(angles)))
+    x2 = np.concatenate(
+        [__make_comlpex_feature(points=1000, center=5) for _ in range(features)], axis=1
     )
-    return complex_numbers
-
-
-def make_cloud_dataset() -> Tuple[ComplexMatrix, CategoricalLabels]:
-    num_samples_per_cloud = 100
-
-    centers = [2 + 2j, -2 + 2j, -2 - 2j, 2 - 2j]
-    radii = [1, 1, 1, 1]
-
-    cloud1 = __generate_complex_cloud(centers[0], num_samples_per_cloud, radii[0])
-    cloud2 = __generate_complex_cloud(centers[1], num_samples_per_cloud, radii[1])
-    cloud3 = __generate_complex_cloud(centers[2], num_samples_per_cloud, radii[2])
-    cloud4 = __generate_complex_cloud(centers[3], num_samples_per_cloud, radii[3])
-
-    complex_dataset = np.concatenate([cloud1, cloud2, cloud3, cloud4]).reshape(-1, 1)
-    labels = np.concatenate(
-        [
-            np.zeros(num_samples_per_cloud),
-            np.ones(num_samples_per_cloud),
-            2 * np.ones(num_samples_per_cloud),
-            3 * np.ones(num_samples_per_cloud),
-        ]
-    ).reshape(-1, 1)
-
-    complex_dataset = normalize(complex_dataset)
-
-    return shuffle(complex_dataset, labels)
-
-
-def make_linear_binary_dataset():
-    np.random.seed(42)
-
-    x1 = wnp.add(np.random.normal(0, 1, (100, 2)), np.array([5.0, 0.0]))
-    x2 = wnp.add(np.random.normal(0, 1, (100, 2)), np.array([-5.0, 0.0]))
     x = np.concatenate([x1, x2], axis=0)
 
-    y = np.zeros(x.shape[0])
-    y[100:] = 1.0
+    y1 = np.zeros(shape=(1000,))
+    y2 = np.ones(shape=(1000,))
+    y = np.concatenate([y1, y2], axis=0)
 
-    x = wnp.div(
-        wnp.sub(x, np.min(x, axis=0)),
-        wnp.sub(np.max(x, axis=0), np.min(x, axis=0)),
-    )
-
-    return shuffle(x, y)
-
-
-def make_linear_multiclass_dataset():
-    np.random.seed(42)
-
-    x1 = wnp.add(np.random.normal(0, 1, (1000, 2)), np.array([-4.0, -4.0]))
-    x2 = wnp.add(np.random.normal(0, 1, (1000, 2)), np.array([0.0, 0.0]))
-    x3 = wnp.add(np.random.normal(0, 1, (1000, 2)), np.array([4.0, 4.0]))
-    x = np.concatenate(np.array([x1, x2, x3]), axis=0)
-
-    y = np.zeros(x.shape[0])
-    y[1000:2000] = 1.0
-    y[2000:] = 2.0
-
-    x = wnp.div(
-        wnp.sub(x, np.min(x, axis=0)),
-        wnp.sub(np.max(x, axis=0), np.min(x, axis=0)),
-    )
-
-    return shuffle(x, y)
+    return shuffle(normalize(x), y)

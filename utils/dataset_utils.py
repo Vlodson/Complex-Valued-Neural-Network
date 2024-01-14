@@ -16,7 +16,7 @@ def minibatching(
             x[i * batch_size : (i + 1) * batch_size],
             y[i * batch_size : (i + 1) * batch_size],
         )
-        for i in range(x.shape[0] // batch_size + 1)
+        for i in range((x.shape[0] + batch_size - 1) // batch_size)
     ]
 
 
