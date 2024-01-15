@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import numpy as np
 import numpy.typing as npt
 
 from custom_types import ComplexMatrix, CategoricalLabels
