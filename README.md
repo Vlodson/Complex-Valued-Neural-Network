@@ -14,12 +14,12 @@ This section will provide a guide on how to create, train and test a CVNN model.
 
 ## Creating a CVNN Layer
 
-To create a CVNN layer use the Layer class from the layers package. 
+To create a CVNN layer use the Layer class from the layers package.
 
 Creating a single fully connected layer is as simple as initializing a Layer object, which can be done with the following snippet
 
 ```python
-from layers import layer
+from layers import Layer
 
 layer = Layer(neurons=3, activation="linsca")
 ```
