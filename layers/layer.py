@@ -53,13 +53,10 @@ class Layer:
         )
 
         self.weights = wnp.add(
-            wnp.uniform(-1.0, 1.0, (self.input_shape, self.neurons)),
-            wnp.uniform(-1.0, 1.0, (self.input_shape, self.neurons)) * 1.0j,
+            wnp.glorot_uniform((self.input_shape, self.neurons)),
+            wnp.glorot_uniform((self.input_shape, self.neurons)) * 1.0j,
         )
-        self.bias = wnp.add(
-            wnp.uniform(-1.0, 1.0, (1, self.neurons)),
-            wnp.uniform(-1.0, 1.0, (1, self.neurons)) * 1.0j,
-        )
+        self.bias = wnp.zeros((1, self.neurons), dtype=np.complex64)
 
     def __transfer(self, x: ComplexMatrix) -> None:
         """

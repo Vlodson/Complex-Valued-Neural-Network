@@ -9,8 +9,14 @@ def empty(shape: npt.NDArray[np.int_], dtype: npt.DTypeLike) -> npt.NDArray:
 
 
 @njit
-def uniform(low: float, high: float, size: npt.NDArray[np.int_]) -> npt.NDArray:
-    return np.random.uniform(low=low, high=high, size=size)
+def empty_like(x: npt.ArrayLike) -> npt.NDArray:
+    return np.empty_like(x)
+
+
+@njit
+def glorot_uniform(size: npt.NDArray[np.int_]) -> npt.NDArray:
+    limit = (6 / (size[0] + size[1])) ** 0.5
+    return np.random.uniform(low=-1.0 * limit, high=limit, size=size)
 
 
 @njit
@@ -24,5 +30,5 @@ def zeros_like(x: npt.ArrayLike) -> npt.NDArray:
 
 
 @njit
-def empty_like(x: npt.ArrayLike) -> npt.NDArray:
-    return np.empty_like(x)
+def zeros(shape: npt.NDArray[np.int_], dtype: npt.DTypeLike) -> npt.NDArray:
+    return np.zeros(shape=shape, dtype=dtype)
