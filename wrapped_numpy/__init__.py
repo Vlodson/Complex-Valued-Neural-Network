@@ -1,3 +1,3 @@
-from wrapped_numpy.operations import *
-from wrapped_numpy.arr_operations import *
-from wrapped_numpy.literals import *
+from wrapped_numpy.numba_wrapper.operations import *
+from wrapped_numpy.numba_wrapper.arr_operations import *
+from wrapped_numpy.numba_wrapper.literals import *
