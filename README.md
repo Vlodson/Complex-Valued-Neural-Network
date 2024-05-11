@@ -98,7 +98,13 @@ Upon finishing the method will return a dictionary with the values for loss and 
 
 A full example of building a dataset; creating, building, training and testing a model are available inside *scripts.model_script.py*
 
-# User Defined classes
+## Hardware Optimizations
+
+Both GPU and CPU optimizations are implemented for all operations needed to run a model, by wrapping the required numpy functions in either Cupy or decorating numpy funcitons using Numba.
+
+By default Cupy will try to be imported. But in the absence of Cupy, the numpy wrapper will then import the Numba wrapper. There is no fallback if neither are available.
+
+# User Defined Classes
 
 If you wish to create your own activation, loss, metric or optimizer, you can do so by inheriting the base class of whatever you want to create and implementing the methods that are required. This section will shortly gloss over each of the base classes and their required methods.
 
