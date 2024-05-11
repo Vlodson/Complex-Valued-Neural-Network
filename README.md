@@ -6,8 +6,6 @@ Complex valued neural networks work much the same way as real valued deep neural
 
 Within the module are all the implementations for complex valued dense layers, losses, activations and a model class to build models from scratch. Each part is modular and easily expandable.
 
-More details about the project are avialable in the paper provided in this repository.
-
 # Modeling CVNNs
 
 This section will provide a guide on how to create, train and test a CVNN model.
